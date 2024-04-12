@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html class="dark">
+
+<head>
+  <link href="styles/tailwind.css" rel="stylesheet">
+  <link href="styles/addstyle.css" rel="stylesheet">
+
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/tomorrow-night.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline'; 
+  style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline';
+    font-src 'self' data: https://cdnjs.cloudflare.com;
+    connect-src 'self';
+    img-src 'self';
+">
+  <title>SuperModels</title>
+</head>
+
+<body class="bg-neutral-800 text-gray-100">
+  <div class="flex flex-col h-screen">
+    <div class="prose relative flex justify-start" id="dropdown">
+      <button
+        class="m-2 px-4 py-2 bg-neutral-800 flex items-center justify-between w-40 hover:bg-neutral-700 active:bg-neutral-700 rounded-lg"
+        id="dropdownBtn">
+        <span id="currentModel">SuperModel</span>
+        <i class="fas fa-chevron-down "></i>
+      </button>
+      <div
+        class="absolute left-0 top-[52px] p-1 m-2 hidden flex-col flex-1 bg-neutral-700 rounded-lg border border-gray-600 z-10"
+        id="dropdownContent">
+        <button class="px-4 p-1 text-left hover:bg-neutral-800 rounded-lg " onclick="selectModel('SuperModel')"
+          title="This is the fastest model">
+          <i class="fas fa-solid fa-wand-magic-sparkles"></i>
+          <b>SuperModel</b><br><small>The fastest model available</small>
+        </button>
+        <button class="px-4 p-1 text-left hover:bg-neutral-800 rounded-lg " onclick="selectModel('ToolUser')"
+          title="This calls other models, such as Perplexity AI">
+          <i class="fas fa-solid fa-screwdriver-wrench"></i>
+          <b>ToolUser</b><br><small>Uses tools to answer questions</small>
+        </button>
+        <button class="px-4 p-1 text-left hover:bg-neutral-800 rounded-lg " onclick="selectModel('Agent')"
+          title="This evaluates answers and breaks down questions">
+          <i class="fas fa-solid fa-code-branch"></i>
+          <b>Agent</b><br><small>Plans and analyses research</small>
+        </button>
+      </div>
+      <!-- keep space for the minimise - maximise - close buttons -->
+      <div class="mr-[140px]">
+        <button class="p-4 hover:bg-neutral-700" id="settingsBtn" title="Settings"><i class="fas fa fa-cog"
+            aria-hidden="true"></i></button>
+        <div id="settingsContent"
+          class="absolute top-[60px] p-1 hidden flex-col flex-1 bg-neutral-700 rounded-lg border border-gray-600 z-10">
+          <button id="mixtral" class="px-4 p-1 text-left rounded-lg hover:bg-neutral-800"
+            onclick="selectType('mixtral')" title="Powered by Groq">
+            <b>Mixtral</b><br><small>Mistral's 8 x 7B parameter model</small>
+          </button>
+          <button id="llama2" class="px-4 p-1 text-left rounded-lg hover:bg-neutral-800" onclick="selectType('llama2')"
+            title="Powered by Groq">
+            <b>LLaMA 2</b><br><small>Meta's open-source 70B parameter model</small>
+          </button>
+          <button id="gemma" class="px-4 p-1 text-left rounded-lg hover:bg-neutral-800" onclick="selectType('gemma')"
+            title="Powered by Groq">
+            <b>Gemma</b><br><small>Google's open-source 7B parameter model</small></button>
+          <button id="gpt3" class="px-4 p-1 text-left rounded-lg hover:bg-neutral-800" onclick="selectType('gpt3')"
+            title="Powered by Openai">
+            <b>GPT 3.5 Turbo</b><br><small>OpenAI's 175B parameter model</small>
+          </button>
+          <button id="gpt4" class="px-4 p-1 text-left rounded-lg  hover:bg-neutral-800" onclick="selectType('gpt4')"
+            title="Powered by Openai">
+            <b>GPT 4 Turbo</b><br><small>OpenAI's 8 x 222B parameter model</small>
+          </button>
+          <button id="claude" class="px-4 p-1 text-left rounded-lg  hover:bg-neutral-800" onclick="selectType('claude')"
+            title="Powered by Anthropic">
+            <b>Claude 3 Opus</b><br><small>Anthropic's 2T parameter model</small>
+          </button>
+          <button id="gemini" class="px-4 p-1 text-left rounded-lg  hover:bg-neutral-800" onclick="selectType('gemini')"
+            title="Powered by Openai">
+            <b>Gemini 1.0 Pro</b><br><small>Google's 1.6T parameter model</small>
+          </button>
+
+        </div>
+        <button class="p-4 hover:bg-neutral-700" id="databaseBtn" onclick="loadHistory()"
+          title="Reload a conversation"><i class="fa-regular fa-comments"></i></button>
+        <button class="p-4 hover:bg-neutral-700 " id="deleteBtn" onclick="dropTable()" title="Reset the conversation"><i
+            class="fa-regular fa-trash-can"></i></button>
+      </div>
+    </div>
+
+    <div id="reload-conversations" class="hidden w-full h-full bg-neutral-800 z-20">
+      <div id="top" class="fixed h-[60px] mx-4 top-0 left-0 right-0 bg-neutral-800 z-30 flex justify-between mr-[120px]">
+        <input type="text" id="searchInput" placeholder="Search messages..."
+          class="m-2 mt-4 px-4 bg-transparent border border-gray-600 rounded-lg cursor-pointer">
+        <button id="select-button"
+          class="m-2 mt-4 px-4 bg-transparent border border-gray-600 rounded-lg cursor-pointer hover:bg-neutral-600" title="Continue previous conversations">Continue</button>
+        <button id="cancel-button"
+          class="m-2 mt-4 px-4 bg-transparent border border-gray-600 rounded-lg cursor-pointer hover:bg-neutral-600">Cancel</button>
+        <button class="m-2 mt-4 px-4 hover:bg-neutral-600" onclick="dropAll()" title="Delete all conversations"><i
+            class="fas fa-duotone fa-trash"></i></button>
+      </div>
+      <div id="history-area" class="prose justify-start max-w-[650px] p-4 mx-auto flex-1 relative"></div>
+    </div>
+    
+    <div id="scroll-area" class="relative flex-1 overflow-auto">
+      <div id="message-area" class="prose justify-start max-w-[650px] mx-auto">
+        <div id="chat"></div>
+      </div>
+    </div>
+
+    <div class="max-w-[650px] mx-auto w-full">
+      <div id="input-area"
+        class="mb-4 mx-4 flex relative bg-transparent border border-gray-600 shadow rounded-lg overflow-auto cursor-pointer z-10 max-h-32">
+        <textarea id="prompt-input" class="bg-transparent m-4 flex-auto outline-none resize-none"
+          placeholder="Enter your prompt"></textarea>
+
+        <button id="send-button"
+          class="absolute right-0 top-1/2 transform -translate-y-1/2 py-2 px-3 mr-1 rounded-lg hover:bg-neutral-700 ">
+          <i class="fas fa-arrow-right"></i>
+          <div class="items-center" style="display: none;" id="loadingIndicator">
+            <i class="fas fa-spinner fa-spin"></i>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+  </div>
+  <script type="module" src="renderer.js"></script>
+</body>
+
+</html>

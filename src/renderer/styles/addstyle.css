@@ -1,0 +1,50 @@
+
+  /* p {
+    margin-top: 0.5em;
+  }
+   */
+  /* #loadingIndicator {
+    display: none; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+  } */
+    
+  /* .message.user-message, .message.ai-message {
+    padding: 15px;
+    border-radius: 15px;
+    
+  }
+  
+  .message.user-message {
+    background-color: rgb(51, 51, 51);
+  }
+   */
+
+
+/* Width and color of the scrollbar */
+::-webkit-scrollbar {
+  width: 12px; /* Width of the vertical scrollbar */
+  height: 12px; /* Height of the horizontal scrollbar */
+  background: rgb(38 38 38); /* Background color */
+}
+
+/* Handle of the scrollbar */
+::-webkit-scrollbar-thumb {
+  background: #555; /* Handle color */
+  border-radius: 6px; /* Rounded corners for the handle */
+  border: 3px solid #2e2e2e; /* Creates a little space between the scrollbar and the handle */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #666; /* Darker color on hover */
+}
+
+#dropdown, #top {
+  -webkit-app-region: drag;
+}
+button, input {
+  -webkit-app-region: no-drag;
+}

@@ -1,0 +1,146 @@
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: rgb(27, 27, 27);  
+  color: rgb(207, 207, 207);  
+  box-sizing: border-box;
+  letter-spacing: larger;
+  /* font: bold 20px sans-serif; */
+  margin: 0; 
+   
+  /* overflow: hidden; */
+}
+
+p {
+  margin-top: 0.5em;
+}
+
+.grid {
+  display: grid;
+  grid-template-rows: 1fr auto; /* Adjust based on your layout needs */  
+  /* position: relative; */
+  height: 100vh;   
+  gap: 1em; 
+}
+
+#loadingIndicator {
+  display: none; /* Start hidden */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the spinner */
+}
+
+#message-area {
+  position: relative;
+  flex-grow: 1;
+  overflow: auto; /* Makes sure that the area is scrollable */
+  padding: 1em; /* Add some spacing around messages */
+  height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column; 
+  justify-content: start;
+  /* background-color: rgb(51, 51, 51); */
+}
+
+.message.user-message, .message.ai-message {
+  padding: 15px;
+  border-radius: 15px;
+  
+}
+
+.message.user-message {
+  background-color: rgb(51, 51, 51);
+}
+/* #chat { 
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}  */
+
+/* #messages {
+  /* height: 100%; 
+  max-height: calc(100vh - 120px);
+  overflow-y: visible;
+} */
+
+#input-area {
+  display: flex;
+  justify-content: space-evenly; 
+  border: none;
+  border-radius: 15px;
+  /* height: 90%; */
+  border-radius: 15px;
+  overflow: auto;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  border: #555555 solid 1px;  
+  height: auto; /* Initial height; adjust as needed */
+  max-height: 200px; 
+  position: absolute; 
+  bottom: 0; 
+  margin: 0 15px 15px 15px; 
+  width: 95%; 
+  /* align-items: center; */
+  z-index: 1001;
+}
+
+#prompt-input {
+  flex: 0 0 1rem;
+  background-color: transparent;
+  color: rgb(255, 255, 255);
+  border: none;
+  cursor: pointer;
+  outline: none;
+  text-align: left; 
+  padding: 0;
+  margin: 15px;
+  flex-grow: 1; /* Allows the input to grow and fill the space*/
+  margin-right: 0.5em; /*Adds some space between the input and the button */
+  letter-spacing: larger;
+  resize: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+#send-button {
+  flex: 0 0 1rem;
+  background-color: transparent;
+  color: rgb(255, 255, 255);
+  border: none;
+  cursor: pointer;
+  outline: none;
+  font-size: 20px; 
+  text-align: center; 
+  /* white-space: nowrap; Keeps the button text on one line */
+}
+
+#generate-button:hover {
+  /* box-shadow: none; */
+  background-color: rgba(255, 255, 255, 0.021);
+  text-shadow: 0 0 5px white,0 0 20px white, 0 0 50px white;
+}
+
+/* #prompt-input:focus, #prompt-input:active {
+  background-color: rgba(255, 255, 255, 0.01);
+  box-shadow: 0 0 3px white;
+  border-radius: 5px;
+} */
+
+
+/* Width and color of the scrollbar */
+::-webkit-scrollbar {
+  width: 12px; /* Width of the vertical scrollbar */
+  height: 12px; /* Height of the horizontal scrollbar */
+  background: #2e2e2e; /* Background color */
+}
+
+/* Handle of the scrollbar */
+::-webkit-scrollbar-thumb {
+  background: #555; /* Handle color */
+  border-radius: 6px; /* Rounded corners for the handle */
+  border: 3px solid #2e2e2e; /* Creates a little space between the scrollbar and the handle */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #666; /* Darker color on hover */
+}
