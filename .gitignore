@@ -6,5 +6,6 @@ log.txt
 .DS_Store
 python/env/*
 out/
-housekeeping.ipynb
-database.db
+*.ipynb
+*.db
+*.code-workspace
