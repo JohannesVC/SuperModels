@@ -2,7 +2,7 @@
 
 SuperModels is an open-source project running multiple LLM APIs in one desktop app. 
 
-Node.js Electron with tailwindcss for styling.
+Stack: Python, Node.js Electron, and Tailwindcss for styling.
 
 ## Value prop: lightweight Agent Workflows
 

@@ -5,6 +5,7 @@ dist/
 log.txt
 .DS_Store
 python/env/*
+python/.env
 out/
 *.ipynb
 *.db

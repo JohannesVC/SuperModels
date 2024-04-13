@@ -61,3 +61,17 @@ def dispatcher(model_name:str, model_type:ModelType) -> SuperModel | ToolUserNoS
     
     except IndexError as e:
         raise Exception("the model name should come in two parts.", e) 
+
+
+from dotenv import load_dotenv
+import os, sys
+
+cwd = os.getcwd()
+if cwd.endswith("electron_groq"):            
+    env_path=os.path.join(cwd, "python", ".env")
+else: 
+    env_path=os.path.join(cwd, "resources", "python", ".env")
+
+# print('env path', env_path, file=sys.stderr)
+
+load_dotenv(env_path)

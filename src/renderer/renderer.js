@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     sendButton.querySelector('i').className = 'fas fa-regular fa-stop';
     sendButton.addEventListener('click', function () {
       window.api.onPythonExit(() => {
-        console.log("Python script stopped with button.");
+        console.log("Python stream interrupted.");
       });
       loadingIndicator.style.display = 'none';
       sendButton.querySelector('i').className = 'fas fa-arrow-right';
@@ -67,8 +67,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     sendButton.addEventListener('click', function () {
       console.log('click')
       if (!isStreaming) {
-        console.log('!isStreaming')
-        console.log('!isStreaming', promptInput)
         sendInput(promptInput);
       }
     });

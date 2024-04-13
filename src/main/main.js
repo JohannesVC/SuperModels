@@ -6,12 +6,10 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { spawn } from 'child_process';
+import { spawn  } from 'child_process';
 
 import { createRequire } from 'module';
-
 const require = createRequire(import.meta.url);
-// if (require('electron-squirrel-startup')) return;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const htmlPath = path.join(__dirname, '../renderer/index.html');
@@ -20,6 +18,7 @@ let win;
 
 function createWindow() {
   if (require('electron-squirrel-startup')) return;
+
   win = new BrowserWindow({
     fullscreen: false,
     titleBarStyle: 'hidden',
@@ -43,7 +42,6 @@ function createWindow() {
   });
 
   // win.webContents.openDevTools()
-
   win.loadFile(htmlPath);
 }
 app.whenReady().then(createWindow);
@@ -66,6 +64,8 @@ if (app.isPackaged) {
 
 ipcMain.on('run-python-script', (event, args) => {
   const pythonProcess = spawn(pythonExe, [mainPy, args]);
+
+  // console.log("pythonExe path is:", pythonExe)
 
   // to the python
   pythonProcess.stdin.write(args + '\n');
