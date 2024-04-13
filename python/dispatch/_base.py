@@ -22,7 +22,8 @@ class Wrapper:
                 from tkinter import simpledialog
                 res = simpledialog.askstring("Missing API KEY", "Go to groq.com and request an API KEY.")
                 if res:
-                    os.environ['GROQ_API_KEY'] = res
+                    import subprocess
+                    subprocess.run(['setx', 'GROQ_API_KEY', f'{res}'], shell=True)
                     print(json.dumps({'data': "The API key will work once you restart your PC."}))
                 raise EnvironmentError("GROQ_API_KEY is not set in the environment variables.")            
             
@@ -35,8 +36,9 @@ class Wrapper:
                 from tkinter import simpledialog
                 res = simpledialog.askstring("Missing API KEY", "Go to openai.com and request an API KEY.")
                 if res:
-                    os.environ['OPENAI_API_KEY'] = res
-                    print(json.dumps({'data': "The API key will work once you restart your PC."}))               
+                    import subprocess
+                    subprocess.run(['setx', 'OPENAI_API_KEY', f'{res}'], shell=True)
+                    print(json.dumps({'data': "The API key will work once you restart your PC."}))            
                 raise EnvironmentError("OPENAI_API_KEY is not set in the environment variables.")   
             
         elif model in ["sonar-medium-online"]:            
@@ -48,8 +50,9 @@ class Wrapper:
                 from tkinter import simpledialog
                 res = simpledialog.askstring("Missing API KEY", "Go to perplexity.ai and request an API KEY.")
                 if res:
-                    os.environ['PERP_API_KEY'] = res
-                    print(json.dumps({'data': "The API key will work once you restart your PC."}))               
+                    import subprocess
+                    subprocess.run(['setx', 'PERP_API_KEY', f'{res}'], shell=True)
+                    print(json.dumps({'data': "The API key will work once you restart your PC."}))
                 raise EnvironmentError("PERP_API_KEY is not set in the environment variables.")  
         
         if not self.client:            

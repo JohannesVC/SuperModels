@@ -169,8 +169,7 @@ class Agent:
                     print("Agent tooluser_response", self._answer, file=sys.stderr)                    
                     
                     new_prompt = f"Let's take a moment to consider. We just tried to answer: \n {step} \n\nThis as part of \n- {"\n- ".join(step for step in break_down_call.steps)} \n\nThis to answer the original question: {prompt}."
-                    
-                    # note that self._answer accumulates over subsequent steps            
+                            
                     self._should_continue = YesNoReflection(new_prompt, self._answer, model=self._model)
                     
                     reflection:YesOrNo = self._should_continue.call() # type: ignore
