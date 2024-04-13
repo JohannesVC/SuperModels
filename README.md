@@ -1,41 +1,32 @@
 # *`__SuperModels`*
 
-SuperModels is an open-source project running multiple LLM APIs in one desktop app. 
+SuperModels is an open-source project for running multiple LLM APIs in one desktop app. 
 
 ![Not a llama](examples/output.gif)
 
 Give it a try! [Download the executable here!](https://drive.google.com/file/d/1-Gxk9jkKhGLpx7jq6kFIVsU9OTPjgDfv/view?usp=sharing)
 
----
-## *__instructions*
+## *purpose*: 
 
-To run the packaged Electron app (windows only)
-
-- [Download](https://www.python.org/downloads/) and install python on your hd at `C:/python312/python.exe`
-- Join the FREE beta at [groq.com](https://groq.com/) to get a free API KEY 
-- Input the API key when the app prompts you
----
-
-## *__purpose*: `a self-reflecting machine` 
+`A self-reflecting machine:` 
 
 - Think Wittgenstein not Frankenstein
-- Built-in reflection as a mechanism to steer *thinking*: ie. research and analysis
-- Fully customisable and an exercise in best-practice OOP
-
-It also avoids sprawling API wrappers like LangChain
+- Built-in reflection mechanism to steer *thinking*
+- Fully customisable
 
 *__in short*
-> `SuperModels is lightweight, simple (or at least the Python part is), and easy to adapt and customise.`
+> `A lightweight, simple, and easy to adapt Agent.`
 
 Stack: `Python`, `Node.js Electron`, and `TailwindCSS`.
 
 ---
 
-## *__3 modes, a walk through:*
+## *walk-through:*
 
 #### 1. SuperModel
-- [Groq](https://groq.com/) is cool as it's faster than any other inference engine as it uses LPUs instead of GPUs. 
+- [Groq](https://groq.com/) is cool as it's faster than any other inference engine as it uses LPUs.
 - And it's free :)
+- Also OpenAI
 
 #### 2. ToolUser
 - A main argument for the Python is the `python_wizzard` - although running generated code is not without risk. (Be prepared for SuperModels to take control over your OS and start operating your home automation.)
@@ -75,3 +66,16 @@ elif reflection.answer:
     ...
 ```
 >`The combination of a super fast tooluser and nominally typed answers allows for quite impressive reflections and reasoning.` Although I still haven't got it to turn the lights off.
+
+---
+
+## *instructions*
+
+Give it a try! [Download the executable here!](https://drive.google.com/file/d/1-Gxk9jkKhGLpx7jq6kFIVsU9OTPjgDfv/view?usp=sharing) (Note that you may get malware warnings.)
+
+Then:
+
+- Join the FREE beta at [groq.com](https://groq.com/) to get a free API KEY 
+- Input the API key when the app prompts you
+
+- (You may also need to [download](https://www.python.org/downloads/) and install python on your hd at `C:/python312/python.exe`)
