@@ -17,7 +17,7 @@ Give it a try! [Download the executable here!](https://drive.google.com/file/d/1
 *__in short*
 `A lightweight, simple, and easy to adapt Agent.`
 
-Stack: `Python`, `Node.js Electron`, and `TailwindCSS`.
+Stack: `Python`, `Electronjs`, and `TailwindCSS`.
 
 ---
 
@@ -76,5 +76,3 @@ Then:
 
 - Join the FREE beta at [groq.com](https://groq.com/) to get a free API KEY 
 - Input the API key when the app prompts you
-
-- (You may also need to [download](https://www.python.org/downloads/) and install python on your hd at `C:/python312/python.exe`)
