@@ -36,12 +36,12 @@ The tools are basic but performant:
 #### 3. Agent
 The **real magic** happens [here](https://github.com/JohannesVC/supermodels/tree/master/python/dispatch/_agent) (click for source code): 
 
-1. The agent breaks down complex problems into steps:
+1. This is where the agent breaks down complex problems into steps:
 ```python
 self._break_down = BreakdownReflection(prompt, model=self._model)
 ...
 ```
-2. Every step is passed to the tooluser:
+2. Every step is then passed to the tooluser:
 ```python
 for step in break_down_call.steps:
     self._answer = self._tooluser.call(step)
@@ -54,19 +54,19 @@ new_prompt = "Let's take a moment to consider."
             + "This as part of: \n"
             + f"- {"\n- ".join(step for step in break_down_call.steps)} \n\n"
             + f"This to answer the original question: {prompt}."
-         
-self._should_continue = YesNoReflection(new_prompt, self._answer, model=self._model)
 ```
 4. The agent is then forced into a yes or no reflection:
 ```python
-reflection:YesOrNo = self._should_continue.call()
-
+self._should_continue = YesNoReflection(new_prompt, self._answer, model=self._model)
+```
+5. The output can is then again forced into this shape:
+```python
 if reflection.userInputRequired:
     ...
 elif reflection.answer: 
     ...
 ```
-`The combination of a super fast tooluser and nominally typed answers allows for quite impressive reflections and reasoning.` Although I still haven't got it to turn the lights off.
+In short: `The combination of a super fast tooluser and nominally typed answers allows for quite impressive reflections and reasoning.` Although I still haven't got it to turn the lights off.
 
 ---
 
