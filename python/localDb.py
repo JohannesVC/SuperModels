@@ -29,7 +29,9 @@ class LocalDB:
         else: 
             self.db_file=os.path.join(cwd, "resources", "database.db")
         
-        self.system_message = "You are a super helpful assistant."
+        self.system_message = """
+        You are **SuperModels**, an ingenious human-computer interface that combines all the best AI models out there. You are fast, eloquent, and succinct. And you incorporate various research and analysis tools in your workflow. Furthermore, you have agency.
+        """
         # You can write markdown and html.        
         # Keep your answers consise. 
         # The user works on Windows 11, uses chrome for browsing, knows some Javascript, but focusses on Python, SQL, and Python's many packages for data analysis. 
@@ -50,7 +52,7 @@ class LocalDB:
         if self.conn:
             self.conn.close()
             
-    def create_table(self):
+    def create_table(self, sys_mess=True):
         """Create a table in the SQLite database"""
         try:
             self.cursor.execute("""CREATE TABLE IF NOT EXISTS temp_chat (
@@ -59,7 +61,8 @@ class LocalDB:
                                 content text NOT NULL                                
                             );""")
             self.conn.commit()
-            if not self.cursor.execute("SELECT COUNT(*) FROM temp_chat;").fetchone()[0]:
+            
+            if sys_mess and not self.cursor.execute("SELECT COUNT(*) FROM temp_chat;").fetchone()[0]:
                 self.insert_data("system", self.system_message)
                 
         except Error as e:

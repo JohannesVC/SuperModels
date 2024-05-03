@@ -55,14 +55,19 @@
             aria-hidden="true"></i></button>
         <div id="settingsContent"
           class="absolute top-[60px] p-1 hidden flex-col flex-1 bg-neutral-700 rounded-lg border border-gray-600 z-10">
+          <button id="llama3" class="px-4 p-1 text-left rounded-lg bg-neutral-800 hover:bg-neutral-800"
+            onclick="selectType('llama3')" title="Powered by Groq">
+            <b>LLaMA 3 70B</b><br><small>Meta's open-source 70B parameter model</small>
+          </button>
+          <button id="llama3-8b" class="px-4 p-1 text-left rounded-lg hover:bg-neutral-800"
+            onclick="selectType('llama3-8b')" title="Powered by Groq">
+            <b>LLaMA 3 8B</b><br><small>Meta's open-source 8B parameter model</small>
+          </button>
           <button id="mixtral" class="px-4 p-1 text-left rounded-lg hover:bg-neutral-800"
             onclick="selectType('mixtral')" title="Powered by Groq">
             <b>Mixtral</b><br><small>Mistral's 8 x 7B parameter model</small>
           </button>
-          <button id="llama2" class="px-4 p-1 text-left rounded-lg hover:bg-neutral-800" onclick="selectType('llama2')"
-            title="Powered by Groq">
-            <b>LLaMA 2</b><br><small>Meta's open-source 70B parameter model</small>
-          </button>
+
           <button id="gemma" class="px-4 p-1 text-left rounded-lg hover:bg-neutral-800" onclick="selectType('gemma')"
             title="Powered by Groq">
             <b>Gemma</b><br><small>Google's open-source 7B parameter model</small></button>
@@ -92,11 +97,13 @@
     </div>
 
     <div id="reload-conversations" class="hidden w-full h-full bg-neutral-800 z-20">
-      <div id="top" class="fixed h-[60px] mx-4 top-0 left-0 right-0 bg-neutral-800 z-30 flex justify-between mr-[120px]">
+      <div id="top"
+        class="fixed h-[60px] mx-4 top-0 left-0 right-0 bg-neutral-800 z-30 flex justify-between mr-[120px]">
         <input type="text" id="searchInput" placeholder="Search messages..."
           class="m-2 mt-4 px-4 bg-transparent border border-gray-600 rounded-lg cursor-pointer">
         <button id="select-button"
-          class="m-2 mt-4 px-4 bg-transparent border border-gray-600 rounded-lg cursor-pointer hover:bg-neutral-600" title="Continue previous conversations">Continue</button>
+          class="m-2 mt-4 px-4 bg-transparent border border-gray-600 rounded-lg cursor-pointer hover:bg-neutral-600"
+          title="Continue previous conversations">Continue</button>
         <button id="cancel-button"
           class="m-2 mt-4 px-4 bg-transparent border border-gray-600 rounded-lg cursor-pointer hover:bg-neutral-600">Cancel</button>
         <button class="m-2 mt-4 px-4 hover:bg-neutral-600" onclick="dropAll()" title="Delete all conversations"><i
@@ -104,7 +111,7 @@
       </div>
       <div id="history-area" class="prose justify-start max-w-[650px] p-4 mx-auto flex-1 relative"></div>
     </div>
-    
+
     <div id="scroll-area" class="relative flex-1 overflow-auto">
       <div id="message-area" class="prose justify-start max-w-[650px] mx-auto">
         <div id="chat"></div>
@@ -113,7 +120,7 @@
 
     <div class="max-w-[650px] mx-auto w-full">
       <div id="input-area"
-        class="mb-4 mx-4 flex relative bg-transparent border border-gray-600 shadow rounded-lg overflow-auto cursor-pointer z-10 max-h-32">
+        class="mb-4 mx-4 pr-6 flex relative bg-transparent border border-gray-600 shadow rounded-lg overflow-auto cursor-pointer z-10 max-h-32">
         <textarea id="prompt-input" class="bg-transparent m-4 flex-auto outline-none resize-none"
           placeholder="Enter your prompt"></textarea>
 

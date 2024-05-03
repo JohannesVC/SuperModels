@@ -4,9 +4,23 @@ from pydantic import BaseModel, ValidationError
 from localDb import Message
 from typing import Generator, Union, Type, Optional
 from ._base import Wrapper, ModelType
-from ._tooluser import ToolUser, ToolUserNoStream
 from ._tools import tools_json
+from ._nos_tooluser import NoS_ToolUser
+from ._tooluser import ToolUser
 
+    
+def agent_dispatcher(model_name_1:ModelType) -> (ToolUser | NoS_ToolUser):
+    """
+    This is slightly unelegant. Ideally the tooluser knows what to do.
+    """
+    if model_name_1 in ["gpt-4-turbo", "gpt-3.5-turbo"]:
+        return ToolUser(model_name_1)
+    elif model_name_1 in ["llama3-70b-8192", "llama3-8b-8192", "gemma-7b-it", "mixtral-8x7b-32768"]:
+        return NoS_ToolUser(model_name_1)                
+    else: 
+        raise Exception("model_name_1 not found in tooluser", model_name_1) 
+    
+    
 class BreakDownInSteps(BaseModel):
     steps: list[str]    
 
@@ -19,14 +33,16 @@ class YesOrNo(BaseModel):
 class ReflectionBase(ABC):
     def __init__(self, prompt, model:ModelType): 
         self._model = model
-        self._wrapper = Wrapper(model=self._model) if self._model else Wrapper() # "mixtral-8x7b-32768"   
+        self._wrapper = Wrapper(model=self._model) if self._model else Wrapper()    
         self._schema = json.dumps(self.class_.model_json_schema(), indent=2)        
         self._prompt = prompt
         self._tools = json.dumps(tools_json, indent=2)
         self._messages = [Message(role="system", 
-                            content=f"""You are a highly critical reasoning engine that outputs JSON.
+                            content=f"""
+                            You are a highly critical reasoning engine that outputs JSON.
                             You have access to the following tools: {self._tools}.
-                            The JSON object must use the schema: {self._schema}"""), 
+                            The JSON object must use the schema: {self._schema}
+                            """), 
                          Message(role="user", content= f"""
                                 You were asked: \n{self._prompt}.""")]
     @property
@@ -76,10 +92,14 @@ class YesNoReflection(ReflectionBase):
         self._answer = answer
         print('YesNoReflection initialised with', self._wrapper._model, file=sys.stderr)
         self._messages = [Message(role="system", 
-                        content=f"""You have expert judgement that outputs JSON. 
-                            The JSON object must use the schema: {self._schema}"""),
+                        content=f"""
+                        You have expert judgement that outputs JSON.
+                        The JSON object must use the schema: {self._schema}
+                        """),
                 Message(role="system", 
-                        content= f"The user requested: \n{self._prompt}. \n\nThe assistant answered: \n{self._answer}. \n\nIs this complete, accurate, balanced, and satisfactory in all possible ways? Answer this in 'true' or 'false' - as per your JSON schema - and give a short reason of max 25 words for your answer. Ask user input if required.")]
+                        content= f"""
+                        The user requested: \n{self._prompt}. \n\nThe assistant answered: \n{self._answer}. \n\nIs this complete, accurate, balanced, and satisfactory in all possible ways, or is it partial or incomplete, or not satisfying all aspects of the original question? Answer this in 'true' or 'false' - as per your JSON schema - and give a short reason of max 25 words for your answer. Ask user input if required.
+                        """)]
         # print("YesNoReflection messages:", self._messages, file=sys.stderr)
         
     @property
@@ -97,16 +117,16 @@ class BreakdownReflection(ReflectionBase):
         super().__init__(prompt, model)
         self._messages[0].content=f"""
         You are a reasoning engine that outputs JSON. 
-        You break down complex requests in simpler, actionable steps, using analysis and/or research.
+        You break down complex requests in simpler, actionable steps.
         You have access to the following tools: {self._tools}.
-        If anything is in need of clarification, ask for user input using the optional keyword argument. However, this is not required.
-        Note that only complex requests require breaking down. Keep it concise. Don't give more than 3-5 steps.
+        If anything is in need of clarification, ask for user input using the optional keyword argument. 
+        If the problem is simple, do not break it down, simple reformulate it for better understanding. Only complex requests require breaking down. So at all times, reduce complexity, do not add complexity. Never give more than 3 steps.
         The JSON object must use the following JSON schema: \n{self._schema}
         """
         self._messages[1].content = (
             f"You were asked: \n{self._prompt}.\n" 
-            + (f'The answer you came up with is: \n{answer}.\n' if answer else '')
-            + "Break this down in actionable steps and provide the steps in the JSON schema."
+            + (f'The answer you came up with is: \n{answer}. \n' if answer else '')
+            + "Break this down in steps as per JSON schema."
             ) 
         
     @property
@@ -116,19 +136,14 @@ class BreakdownReflection(ReflectionBase):
     
     def test(self):
         response = '{"steps": ["Go to the shops.", "Buy fruit."]}'            
-        return self.class_.model_validate_json(response)        
-        
+        return self.class_.model_validate_json(response)     
+
 class Agent:
     def __init__(self, model_name_1:ModelType, maxIter = 3):
-        self._maxIter = maxIter
-        if model_name_1 in ["gpt-4-turbo-preview", "gpt-3.5-turbo"]:
-            self._tooluser = ToolUser(model_name_1)
-        elif model_name_1 in ["llama2-70b-4096", "gemma-7b-it", "mixtral-8x7b-32768"]:
-            self._tooluser = ToolUserNoStream(model_name_1)                
-        else: 
-            raise Exception("model_name_1 not found in tooluser", model_name_1)
+        self._maxIter = maxIter        
+        self._tooluser = agent_dispatcher(model_name_1)
             
-        self._model = self._tooluser._wrapper._model     
+        self._model:ModelType = self._tooluser._wrapper._model     
         self._should_continue = None
         self._answer = ''
         print("Agent _tooluser_call initialised with :", self._model, file=sys.stderr) 
@@ -168,7 +183,7 @@ class Agent:
                         
                     print("Agent tooluser_response", self._answer, file=sys.stderr)                    
                     
-                    new_prompt = f"Let's take a moment to consider. We just tried to answer: \n {step} \n\nThis as part of \n- {"\n- ".join(step for step in break_down_call.steps)} \n\nThis to answer the original question: {prompt}."
+                    new_prompt = f"Let's take a moment to consider. We just tried to answer: \n {step} \n\nThis as part of \n- {"\n- ".join(step for step in break_down_call.steps)} \n\nThis to answer the original question: {prompt}. Are all steps answered with the anwer to this first step?"
                             
                     self._should_continue = YesNoReflection(new_prompt, self._answer, model=self._model)
                     

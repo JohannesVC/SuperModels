@@ -711,7 +711,7 @@ video {
 }
 
 .prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  color: var(--tw-prose-headings);
+  color: #f3f4f6;
   font-weight: 600;
   font-size: 1.25em;
   margin-top: 1.6em;
@@ -1051,6 +1051,10 @@ video {
   margin-bottom: 0;
 }
 
+.prose :where(em):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  font-family: cursive;
+}
+
 .prose :where(blockquote p):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
   font-style: normal;
 }
@@ -1296,6 +1300,10 @@ video {
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+}
+
+.pr-6 {
+  padding-right: 1.5rem;
 }
 
 .text-left {

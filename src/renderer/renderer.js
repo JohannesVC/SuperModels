@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     sendButton.querySelector('i').className = 'fas fa-regular fa-stop';
     sendButton.addEventListener('click', function () {
       window.api.onPythonExit(() => {
-        console.log("Python stream interrupted.");
+        // console.log("Python stream interrupted.");
       });
       loadingIndicator.style.display = 'none';
       sendButton.querySelector('i').className = 'fas fa-arrow-right';
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 
   let ModelName = 'SuperModel'
-  let ModelType = 'mixtral'
+  let ModelType = 'llama3'
 
   // send logic on button press: including runPythonScript
   function sendInput(inputElement) {
@@ -50,7 +50,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
       newMessage.className = "messages"
       newMessage.innerHTML = `<div class="bg-neutral-700 rounded-lg p-3"><p><b>User</b></p>${window.api.markdown(prompt)}</div>`;
       messagesDiv.insertBefore(newMessage, chatDiv);
-      scrollArea.scrollTop = scrollArea.scrollHeight;
+      if (autoScroll) {
+        scrollArea.scrollTop = scrollArea.scrollHeight;
+      }
       codeBlock(newMessage)
       window.api.runPythonScript(JSON.stringify({ prompt: prompt, model_name: [ModelName, ModelType] }));
     }
@@ -65,7 +67,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
       }
     });
     sendButton.addEventListener('click', function () {
-      console.log('click')
       if (!isStreaming) {
         sendInput(promptInput);
       }
@@ -78,6 +79,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   let accumulatedText = '';
   let accumulatedData = '';
   const uniqueKeys = new Set();
+  let autoScroll = true;
 
   window.api.onPythonOutput((data) => {
     isStreaming = true;
@@ -96,7 +98,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const renderedMarkdown = window.api.markdown(accumulatedText);
             chatDiv.innerHTML = `<div class="p-3"><p><b>Assistant</b></p>${renderedMarkdown}</div>`;
             codeBlock(chatDiv)
-            scrollArea.scrollTop = scrollArea.scrollHeight;
+
+            if (autoScroll) {
+              scrollArea.scrollTop = scrollArea.scrollHeight;
+            }
           }
           // Check for end-of-stream indicator
           if (chunk.hasOwnProperty('end_of_stream')) {
@@ -109,8 +114,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
               messagesDiv.insertBefore(newMessage, chatDiv);
               codeBlock(newMessage)
               allMessages.push({ role: 'assistant', content: accumulatedText });
-
-              // scrollArea.scrollTop = scrollArea.scrollHeight;
             }
             chatDiv.innerHTML = '';
             accumulatedData = '';
@@ -124,12 +127,27 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
           ifLoadHistory(chunk)
 
-          scrollArea.scrollTop = scrollArea.scrollHeight;
+          if (autoScroll) {
+              scrollArea.scrollTop = scrollArea.scrollHeight;
+            }
         } catch (error) {
           console.error("Failed to parse chunk as JSON:", error);
         }
       }
     });
+  });
+  
+  scrollArea.addEventListener('scroll', () => {
+    // Calculate the distance from the bottom
+    const fromBottom = scrollArea.scrollHeight - scrollArea.scrollTop - scrollArea.clientHeight;
+  
+    // If the user scrolls up and they are not at the bottom, disable auto-scroll
+    if (fromBottom > 10) { // 10 is a small threshold to ensure it's not a small scroll mistake
+      autoScroll = false;
+    } else {
+      // If the user scrolls back to the bottom, enable auto-scroll
+      autoScroll = true;
+    }
   });
 
   const keysArray = Array.from(uniqueKeys);
@@ -250,7 +268,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
   // modal
-  ///////////////////////////////////////////////////////////////////////////
+  //-------------------------
 
   const historyDiv = document.getElementById('history-area');
   const selectButton = document.getElementById('select-button');
@@ -355,7 +373,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             summaryIds.push(summaryId);  // we add ids to an array
             summary.classList.add('bg-neutral-700');
           }
-          console.log('summary.classList', summary.classList)
+          // console.log('summary.classList', summary.classList)
         }
       });
     });
@@ -430,5 +448,4 @@ document.addEventListener('DOMContentLoaded', (event) => {
   window.api.onPythonExit((event, code) => {
     console.info(`Python process exited with code ${code}`);
   });
-
 });

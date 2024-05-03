@@ -17,7 +17,7 @@ schema = {json.dumps(Summary.model_json_schema(), indent=2)}
 class CleanupLLM(BaseLLM):
     def __init__(self):
         logger.debug('Started CleanupLLM.')
-        self.wrapper = Wrapper(model='mixtral-8x7b-32768')
+        self.wrapper = Wrapper() # was mixtral, now default aka llama3
         self._model = self.wrapper.model
         
     def _request(self, messages): 

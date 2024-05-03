@@ -4,15 +4,28 @@ from abc import ABC, abstractmethod
 from localDb import Message
 
 # Type alias
-ModelType = Literal["llama2-70b-4096", "mixtral-8x7b-32768", "gemma-7b-it",
-                    "gpt-4-turbo-preview", "gpt-3.5-turbo", "sonar-medium-online"]
+ModelType = Literal["llama3-70b-8192", 
+                    "llama3-8b-8192", 
+                    "mixtral-8x7b-32768", 
+                    "gemma-7b-it",
+                    "gpt-4-turbo", 
+                    "gpt-3.5-turbo", 
+                    "sonar-medium-online",
+                    "claude-3-opus-20240229"] #  gemini
+
 
 class Wrapper:
-    def __init__(self, model: ModelType = "mixtral-8x7b-32768"):
+    def __init__(self, model: ModelType = "llama3-70b-8192") -> None: 
+        """
+        The initialisation takes a model name and returns a client instance. 
+        When the wrapper has no model specified it falls back on llama3-70b-8192.
         
+        :params model: "llama3-70b-8192", "llama3-8b-8192", "mixtral-8x7b-32768", "gemma-7b-it", "gpt-4-turbo", "gpt-3.5-turbo", "sonar-medium-online", "claude-3-opus-20240229"c
+        :returns: the API client.
+        """
         self._model: ModelType = model
-             
-        if model in ["llama2-70b-4096", "mixtral-8x7b-32768", "gemma-7b-it"]:
+        
+        if model in ["llama3-70b-8192", "llama3-8b-8192", "mixtral-8x7b-32768", "gemma-7b-it"]:
             from groq import Groq
             API_KEY = os.getenv('GROQ_API_KEY')
             if API_KEY:
@@ -27,7 +40,7 @@ class Wrapper:
                     print(json.dumps({'data': "The API key will work once you restart your PC."}))
                 raise EnvironmentError("GROQ_API_KEY is not set in the environment variables.")            
             
-        elif model in ["gpt-4-turbo-preview", "gpt-3.5-turbo"]:    
+        elif model in ["gpt-4-turbo", "gpt-3.5-turbo"]:    
             from openai import OpenAI 
             API_KEY = os.getenv('OPENAI_API_KEY')
             if API_KEY:
@@ -54,6 +67,35 @@ class Wrapper:
                     subprocess.run(['setx', 'PERP_API_KEY', f'{res}'], shell=True)
                     print(json.dumps({'data': "The API key will work once you restart your PC."}))
                 raise EnvironmentError("PERP_API_KEY is not set in the environment variables.")  
+        
+        elif model in ["claude-3-opus-20240229"]:
+            from anthropic import Anthropic
+            API_KEY = os.getenv('ANTHROPIC_API_KEY')
+            if API_KEY:
+                self.client = Anthropic(api_key=API_KEY)
+            else:
+                from tkinter import simpledialog
+                res = simpledialog.askstring("Missing API KEY", "Go to anthropic.com and request an API KEY.")
+                if res:
+                    import subprocess
+                    subprocess.run(['setx', 'ANTHROPIC_API_KEY', f'{res}'], shell=True)
+                    print(json.dumps({'data': "The API key will work once you restart your PC."}))
+                raise EnvironmentError("ANTHROPIC_API_KEY is not set in the environment variables.")  
+        
+        # TODO
+        # elif model in ["gemini-1.5-pro-latest"]: 
+        #     import anthropic
+        #     API_KEY = os.getenv('ANTHROPIC_API_KEY')
+        #     if API_KEY:
+        #         self.client = anthropic.Anthropic(API_KEY)
+        #     else:
+        #         from tkinter import simpledialog
+        #         res = simpledialog.askstring("Missing API KEY", "Go to anthropic.com and request an API KEY.")
+        #         if res:
+        #             import subprocess
+        #             subprocess.run(['setx', 'ANTHROPIC_API_KEY', f'{res}'], shell=True)
+        #             print(json.dumps({'data': "The API key will work once you restart your PC."}))
+        #         raise EnvironmentError("ANTHROPIC_API_KEY is not set in the environment variables.")  
         
         if not self.client:            
             raise ValueError(f"Failed to initialize API client for model: {model}")

@@ -3,14 +3,14 @@ import os, json, sys, io
 from util import logger
 from abc import ABC, abstractmethod
 from localDb import LocalDB
-from ._base import Wrapper
+from ._base import Wrapper, stream_chunks
 
 online_llm = {
     "type": "function",
     "function":
     {
         "name": "online_llm",
-        "description": "Use this function to search the internet.",
+        "description": "Use this function to if you cannot answer a question with your own knowledge and need to search the internet. Use this tool when something is either highly local or more recent than your training cutoff.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -28,13 +28,14 @@ python_wizzard = {
     "function":
     {
         "name": "python_wizzard",
-        "description": "Use this function to calculate, find the date and time, and reason logically more generally.",
+        "description": """Use this function like a jupyter notebook's **code** cell to write code, calculate, and find the system's date and time. You have access to Python's standard library. Use print statements once but **never** more than once in a codeblock. 
+        If it doesn't work you will get a chance to try again.""",
         "parameters": {
             "type": "object",
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "Pass a clear and concise instruction on how to approach the solution."
+                    "description": "Pass a clear and concise instruction in natural language on how to approach the solution. NEVER pass code."
                 },
             },
             "required": ["query"]
@@ -89,7 +90,7 @@ class Online_llm(BaseTool):
 
 class Coder(BaseTool):    
     def __init__(self):
-        self._wrapper = Wrapper('mixtral-8x7b-32768')
+        self._wrapper = Wrapper('llama3-70b-8192') # was mixtral
         self.analyser_system_message = """
         Write some python code to solve the user's problem. 
         Return only python code in the following Markdown format, e.g.:
@@ -138,7 +139,7 @@ class Coder(BaseTool):
     ```
     """     
 
-    def run(self, query) -> Generator[Dict[str, str], None, None]: 
+    def run(self, query) -> Generator[Dict[str, str], None, None]:
         response = self._wrapper.client.chat.completions.create(
             model=self._wrapper.model,  
             messages=[{"role":"system","content": self.analyser_system_message},
@@ -153,29 +154,36 @@ class Coder(BaseTool):
                 full_code += content_chunk
                 # clean_code = self._sanitize_streaming_output(content_chunk)
                 yield {'stream': content_chunk}
-    
-            code = self._sanitize_output(full_code) 
-            
+                
+        except Exception as e:            
+            raise Exception("Coder.run's stream failed on:", e.args[0])
+        
+        try:
             try:
+                code = self._sanitize_output(full_code) 
+                print("code for exec", code, file=sys.stderr)           
+            
                 output_buffer = io.StringIO()
                 current_stdout = sys.stdout
                 sys.stdout = output_buffer
                 exec(code)
                 
                 output = output_buffer.getvalue()
-            finally:
-                sys.stdout = current_stdout
                 
-            yield {'code': "```python" + code + "\n```\n"}    
-            yield {'result': "\t Raw output: " + output + "\n"}            
-            yield {'data': self._format_result(code, output)} 
+            except Exception as e: 
+                raise Exception('exec(code)', e.args[0], str(code))
+        finally:
+            sys.stdout = current_stdout                
             
-    
-        except Exception as e:
-            raise Exception("Coder.run ran into:", e.args)
+        yield {'code': "```python" + code + "\n```\n"}    
+        yield {'result': "\t Raw output: " + output + "\n"}            
+        yield {'data': self._format_result(code, output)} 
+        
+
+        
 
     # def generate_embedding(text: str) -> list[float]:    
-    #     resp = openai_client.embeddings.create(
+    #     resp = openai_wrapper.embeddings.create(
     # 		input=text, 
     # 		model="text-embedding-ada-002")
     #     return resp.data[0].embedding

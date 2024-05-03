@@ -14,9 +14,11 @@ export default {
               '&:hover': { color: theme('colors.blue.400'),},
             },
             p: { margin: theme('spacing.2') },
+            em: { fontFamily: 'cursive' },
             strong: { color: theme('colors.gray.100') },
             h1: { color: theme('colors.gray.100'), },
             h2: { color: theme('colors.gray.100'), },
+            h3: { color: theme('colors.gray.100'), },
             blockquote: { 
               color: theme('colors.gray.100'), 
               fontWeight: 'normal',

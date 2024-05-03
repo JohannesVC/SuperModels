@@ -19,6 +19,11 @@ try:
             model_name, model_type = input_dict.get('model_name')                  
             llm = dispatcher(model_name, model_type) 
             
+            if "claude" in model_type: # this is inefficient
+                with LocalDB() as db: 
+                    if 'system' == db.load_temp()[0].role:
+                        db.drop_table()
+                
             try: 
                 keys = []
                 for json_chunk in llm.call(prompt): 
@@ -40,15 +45,17 @@ try:
             
     if "drop_table" in input_dict:
         with LocalDB() as db: 
-            try: db.drop_table()
-            finally: db.create_table()
+            # try: 
+            db.drop_table()
+            # finally: db.create_table()
         print('drop_table', file=sys.stderr)
         sys.stdout.flush()
     
     if "drop_all" in input_dict:
         with LocalDB() as db: 
-            try: db.drop_all()
-            finally: db.create_table()
+            # try: 
+            db.drop_all()
+            # finally: db.create_table()
         print('drop_all', file=sys.stderr)
         sys.stdout.flush()
     
@@ -61,7 +68,7 @@ try:
         
         sys.stdout.flush() 
         
-    if "summary_ids" in input_dict:
+    if "summary_ids" in input_dict:     # this drops the current table and loads one from conversation history
         summary_ids = input_dict.get('summary_ids')           
         with LocalDB() as db:
             db.drop_table() # we could start by summarizing this one too but that creates lag
