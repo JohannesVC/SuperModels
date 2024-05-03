@@ -4,7 +4,7 @@ SuperModels is an open-source project for running LLM agents in a user-friendly 
 
 ![Not a llama](examples/output.gif)
 
-Give it a try! [Download the executable here!](https://drive.google.com/file/d/1-Gxk9jkKhGLpx7jq6kFIVsU9OTPjgDfv/view?usp=sharing)
+Give it a try! [Download the executable here!](https://storage.googleapis.com/supermodels/SuperModels-1.0.0%20Setup.zip)
 
 ## *purpose*: 
 
