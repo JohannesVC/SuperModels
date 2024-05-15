@@ -47,7 +47,7 @@ for step in break_down.steps:
 ```
 3. The agent reflects on the result:
 ```python
-work_harder = YesNoReflection(new_prompt, answer, model=self._model)
+should_continue = YesNoReflection(new_prompt, answer, model=self._model)
 ```
 
 In short: `The combination of a super fast tooluser and nominally typed answers allows for quite impressive reflections and reasoning.` Although I still haven't got it to turn the lights off.
