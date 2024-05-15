@@ -56,7 +56,7 @@ In short: `The combination of a super fast tooluser and nominally typed answers 
 
 ## *instructions*
 
-Give it a try! [Download the executable here!](https://drive.google.com/file/d/1-Gxk9jkKhGLpx7jq6kFIVsU9OTPjgDfv/view?usp=sharing) (Note that you may get malware warnings.)
+Give it a try! [Download the executable here!](https://storage.googleapis.com/supermodels/SuperModels-1.0.0%20Setup.zip)
 
 Then:
 
