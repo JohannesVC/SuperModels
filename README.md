@@ -45,9 +45,9 @@ break_down = BreakdownReflection(prompt)
 for step in break_down.steps:
     answer = tooluser.call(step)
 ```
-3. The agent reflects on the result:
+3. The agent reflects on the tooluser's answer, and whether it should break it down further:
 ```python
-should_continue = YesNoReflection(new_prompt, answer, model=self._model)
+is_satisfying = YesNoReflection(prompt, answer)
 ```
 
 In short: `The combination of a super fast tooluser and nominally typed answers allows for quite impressive reflections and reasoning.` Although I still haven't got it to turn the lights off.
