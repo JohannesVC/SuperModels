@@ -38,41 +38,25 @@ The **real magic** happens [here](https://github.com/JohannesVC/supermodels/tree
 
 1. This is where the agent breaks down complex problems into steps:
 ```python
-self._break_down = BreakdownReflection(prompt, model=self._model)
-...
+break_down = BreakdownReflection(prompt)
 ```
-2. Every step is then passed to the tooluser:
+2. Every step is then passed to the *tooluser*:
 ```python
-for step in break_down_call.steps:
-    self._answer = self._tooluser.call(step)
+for step in break_down.steps:
+    answer = tooluser.call(step)
 ```
-3. The tooluser's answer is fed back into the model:
+3. The agent reflects on the tooluser's answer, and whether it should break it down further:
 ```python
-new_prompt = "Let's take a moment to consider."
-            + "We just tried to answer: \n"
-            + step + "\n\n"
-            + "This as part of: \n"
-            + f"- {"\n- ".join(step for step in break_down_call.steps)} \n\n"
-            + f"This to answer the original question: {prompt}."
+is_satisfying = YesNoReflection(prompt, answer)
 ```
-4. The agent is then forced into a yes or no reflection:
-```python
-self._should_continue = YesNoReflection(new_prompt, self._answer, model=self._model)
-```
-5. The output can is then again forced into this shape:
-```python
-if reflection.userInputRequired:
-    ...
-elif reflection.answer: 
-    ...
-```
+
 In short: `The combination of a super fast tooluser and nominally typed answers allows for quite impressive reflections and reasoning.` Although I still haven't got it to turn the lights off.
 
 ---
 
 ## *instructions*
 
-Give it a try! [Download the executable here!](https://drive.google.com/file/d/1-Gxk9jkKhGLpx7jq6kFIVsU9OTPjgDfv/view?usp=sharing) (Note that you may get malware warnings.)
+Give it a try! [Download the executable here!](https://storage.googleapis.com/supermodels/SuperModels-1.0.0%20Setup.zip)
 
 Then:
 
