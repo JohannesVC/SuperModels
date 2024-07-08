@@ -1,3 +1,7 @@
+"""
+See dispatch init for notes.
+"""
+
 from dispatch import dispatcher
 import sys, json
 # from util import logger

@@ -33,9 +33,7 @@ class SuperModel(BaseLLM):
                 
             db.insert_data("user", prompt)
             messages = db.load_temp()
-
             
-                            
         print(f'making call', str(messages), file=sys.stderr)
         
         self._request(messages) 

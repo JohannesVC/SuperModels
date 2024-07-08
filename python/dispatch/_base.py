@@ -7,11 +7,11 @@ from localDb import Message, LocalDB
 ModelType = Literal["llama3-70b-8192", 
                     "llama3-8b-8192", 
                     "mixtral-8x7b-32768", 
-                    "gemma-7b-it",
+                    "gemma2-9b-it",
                     "gpt-4o", # "gpt-4-turbo", 
                     "gpt-3.5-turbo", 
                     "llama-3-sonar-large-32k-online",
-                    "claude-3-opus-20240229"] #  gemini
+                    "claude-3-5-sonnet-20240620"] #  gemini
 
 
 class Wrapper:
@@ -20,12 +20,12 @@ class Wrapper:
         The initialisation takes a model name and returns a client instance. 
         When the wrapper has no model specified it falls back on llama3-70b-8192.
         
-        :params model: "llama3-70b-8192", "llama3-8b-8192", "mixtral-8x7b-32768", "gemma-7b-it", "gpt-4-turbo", "gpt-3.5-turbo", "llama-3-sonar-large-32k-online", "claude-3-opus-20240229"c
+        :params model: "llama3-70b-8192", "llama3-8b-8192", "mixtral-8x7b-32768", "gemma2-9b-it", "gpt-4-turbo", "gpt-3.5-turbo", "llama-3-sonar-large-32k-online", "claude-3-5-sonnet-20240620"
         :returns: the API client.
         """
         self._model: ModelType = model
         
-        if model in ["llama3-70b-8192", "llama3-8b-8192", "mixtral-8x7b-32768", "gemma-7b-it"]:
+        if model in ["llama3-70b-8192", "llama3-8b-8192", "mixtral-8x7b-32768", "gemma2-9b-it"]:
             from groq import Groq
             API_KEY = os.getenv('GROQ_API_KEY')
             if API_KEY:

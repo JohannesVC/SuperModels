@@ -1,5 +1,11 @@
 """
 avoid using model names across the project, only use them here and in _base.  
+
+TODO: 
+    - use model_type variables for each model, define them all in one place for easy updating. Preferably top-level. 
+    - use map() or another way of writing the dispatcher below
+    
+    - also fix how claude initiates a temp chat table
 """
 
 from ._supermodel import SuperModel, SuperModelClaude
@@ -28,7 +34,7 @@ def dispatcher(model_name:str, model_type:ModelType) -> SuperModel | SuperModelC
             elif "llama-3-sonar" in model_type:                
                 llm = SuperModel("llama-3-sonar-large-32k-online")
             elif "gemma" in model_type:
-                llm = SuperModel("gemma-7b-it")
+                llm = SuperModel("gemma2-9b-it")
             elif "gpt4" in model_type:
                 llm = SuperModel("gpt-4o") # "gpt-4-turbo")
             elif "gpt3" in model_type:
@@ -48,7 +54,7 @@ def dispatcher(model_name:str, model_type:ModelType) -> SuperModel | SuperModelC
             elif "llama3-8b" in model_type:
                 llm = NoS_ToolUser("llama3-8b-8192")          
             elif "gemma" in model_type:
-                llm = NoS_ToolUser("gemma-7b-it")
+                llm = NoS_ToolUser("gemma2-9b-it")
             elif "gpt4" in model_type:
                 llm = ToolUser("gpt-4o") # "gpt-4-turbo")
             elif "gpt3" in model_type:
@@ -65,7 +71,7 @@ def dispatcher(model_name:str, model_type:ModelType) -> SuperModel | SuperModelC
             elif "llama3-8b" in model_type:
                 llm = Agent(model_name_1="llama3-8b-8192")            
             elif "gemma" in model_type:
-                llm = Agent(model_name_1="gemma-7b-it")
+                llm = Agent(model_name_1="gemma2-9b-it")
             elif "gpt4" in model_type:
                 llm = Agent(model_name_1="gpt-4o") # "gpt-4-turbo")
             elif "gpt3" in model_type:
