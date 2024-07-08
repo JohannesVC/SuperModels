@@ -1,16 +1,16 @@
 import json, time, os, sys
 from typing import Literal, Generator
 from abc import ABC, abstractmethod
-from localDb import Message
+from localDb import Message, LocalDB
 
 # Type alias
 ModelType = Literal["llama3-70b-8192", 
                     "llama3-8b-8192", 
                     "mixtral-8x7b-32768", 
                     "gemma-7b-it",
-                    "gpt-4-turbo", 
+                    "gpt-4o", # "gpt-4-turbo", 
                     "gpt-3.5-turbo", 
-                    "sonar-medium-online",
+                    "llama-3-sonar-large-32k-online",
                     "claude-3-opus-20240229"] #  gemini
 
 
@@ -20,7 +20,7 @@ class Wrapper:
         The initialisation takes a model name and returns a client instance. 
         When the wrapper has no model specified it falls back on llama3-70b-8192.
         
-        :params model: "llama3-70b-8192", "llama3-8b-8192", "mixtral-8x7b-32768", "gemma-7b-it", "gpt-4-turbo", "gpt-3.5-turbo", "sonar-medium-online", "claude-3-opus-20240229"c
+        :params model: "llama3-70b-8192", "llama3-8b-8192", "mixtral-8x7b-32768", "gemma-7b-it", "gpt-4-turbo", "gpt-3.5-turbo", "llama-3-sonar-large-32k-online", "claude-3-opus-20240229"c
         :returns: the API client.
         """
         self._model: ModelType = model
@@ -40,7 +40,7 @@ class Wrapper:
                     print(json.dumps({'data': "The API key will work once you restart your PC."}))
                 raise EnvironmentError("GROQ_API_KEY is not set in the environment variables.")            
             
-        elif model in ["gpt-4-turbo", "gpt-3.5-turbo"]:    
+        elif model in ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"]:    
             from openai import OpenAI 
             API_KEY = os.getenv('OPENAI_API_KEY')
             if API_KEY:
@@ -54,11 +54,11 @@ class Wrapper:
                     print(json.dumps({'data': "The API key will work once you restart your PC."}))            
                 raise EnvironmentError("OPENAI_API_KEY is not set in the environment variables.")   
             
-        elif model in ["sonar-medium-online"]:            
+        elif model in ["llama-3-sonar-large-32k-online"]:            
             from openai import OpenAI
             API_KEY = os.getenv('PERP_API_KEY')
             if API_KEY:
-                self.client = OpenAI(api_key=API_KEY, base_url="https://api.perplexity.ai")        
+                self.client = OpenAI(api_key=API_KEY, base_url="https://api.perplexity.ai")
             else:
                 from tkinter import simpledialog
                 res = simpledialog.askstring("Missing API KEY", "Go to perplexity.ai and request an API KEY.")
@@ -68,11 +68,18 @@ class Wrapper:
                     print(json.dumps({'data': "The API key will work once you restart your PC."}))
                 raise EnvironmentError("PERP_API_KEY is not set in the environment variables.")  
         
-        elif model in ["claude-3-opus-20240229"]:
+        elif model in ["claude-3-5-sonnet-20240620"]:
             from anthropic import Anthropic
             API_KEY = os.getenv('ANTHROPIC_API_KEY')
             if API_KEY:
                 self.client = Anthropic(api_key=API_KEY)
+                
+                # this is inefficient
+                with LocalDB() as db: 
+                    if 'system' == db.load_temp()[0].role:
+                        db.drop_table()
+                        db.create_table(sys_mess=False)
+                        
             else:
                 from tkinter import simpledialog
                 res = simpledialog.askstring("Missing API KEY", "Go to anthropic.com and request an API KEY.")

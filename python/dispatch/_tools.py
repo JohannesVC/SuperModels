@@ -43,7 +43,7 @@ python_wizzard = {
     }
 }
 
-tools_json = [online_llm, python_wizzard]
+tools_json = [python_wizzard] # online_llm, 
 
 class BaseTool(ABC):
     @abstractmethod
@@ -59,7 +59,7 @@ class BaseTool(ABC):
         
 class Online_llm(BaseTool):
     def __init__(self):
-        self._wrapper = Wrapper("sonar-medium-online")
+        self._wrapper = Wrapper("llama-3-sonar-large-32k-online")
         
     def _request(self, search_term):
         self._pp_response = self._wrapper.client.chat.completions.create(

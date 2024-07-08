@@ -550,9 +550,9 @@ video {
 }
 
 .prose :where(p):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  margin-top: 1.25em;
-  margin-bottom: 1.25em;
-  margin: 0.5rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.5rem;
 }
 
 .prose :where([class~="lead"]):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
@@ -635,8 +635,8 @@ video {
 
 .prose :where(ul):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
   list-style-type: disc;
-  margin-top: 1.25em;
-  margin-bottom: 1.25em;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   padding-left: 1.625em;
 }
 
@@ -951,8 +951,9 @@ video {
 }
 
 .prose :where(li):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.25rem;
 }
 
 .prose :where(ol > li):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
@@ -1129,10 +1130,6 @@ video {
   margin-right: auto;
 }
 
-.mb-4 {
-  margin-bottom: 1rem;
-}
-
 .mr-1 {
   margin-right: 0.25rem;
 }
@@ -1185,8 +1182,8 @@ video {
   width: 100%;
 }
 
-.max-w-\[650px\] {
-  max-width: 650px;
+.max-w-\[750px\] {
+  max-width: 750px;
 }
 
 .flex-1 {

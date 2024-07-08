@@ -30,8 +30,8 @@ function createWindow() {
     fullscreenable: false,
     autoHideMenuBar: true,
     icon: path.join(__dirname, '../renderer/icons/favicon.ico'),
-    width: 750,
-    height: 900,
+    width: 800,
+    height: 1000,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true, // secure: true      
@@ -53,11 +53,11 @@ let cleanupPy;
 
 if (app.isPackaged) {
   const basePath = process.resourcesPath;
-  pythonExe = path.join(basePath, 'python', 'env', 'Scripts', 'python.exe');
+  pythonExe = path.join(basePath, 'python', 'miniconda', 'envs', 'supmodenv', 'python.exe');
   mainPy = path.join(basePath, 'python', 'main.py');
   cleanupPy = path.join(basePath, 'python', 'cleanup.py');
 } else {
-  pythonExe = path.join(__dirname, "../../python/env/Scripts/python.exe");
+  pythonExe = path.join(__dirname, "../../python/miniconda/envs/supmodenv/python.exe");
   mainPy = path.join(__dirname, '../../python/main.py');
   cleanupPy = path.join(__dirname, '../../python/cleanup.py');
 }

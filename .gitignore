@@ -6,7 +6,9 @@ log.txt
 .DS_Store
 python/env/*
 python/.env
+python/miniconda/*
 out/
 *.ipynb
 *.db
 *.code-workspace
+.apiKeys.bat

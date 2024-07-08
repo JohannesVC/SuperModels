@@ -25,10 +25,17 @@ class SuperModel(BaseLLM):
         :return: JSON string.
         """
         with LocalDB() as db:
-            db.create_table()
+            if self._wrapper._model == "llama-3-sonar-large-32k-online":
+                db.create_table(sys_mess=False)
+                db.insert_data('system', "The user is located in London, UK. \n- They use the metric system and Celcius for temperature. \n- **Always cite sources in your answer.** \n- **Use markdown and html to embed content.**")
+            else:
+                db.create_table()
+                
             db.insert_data("user", prompt)
             messages = db.load_temp()
+
             
+                            
         print(f'making call', str(messages), file=sys.stderr)
         
         self._request(messages) 

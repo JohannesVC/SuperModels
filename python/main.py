@@ -18,23 +18,11 @@ try:
         if "model_name" in input_dict:             
             model_name, model_type = input_dict.get('model_name')                  
             llm = dispatcher(model_name, model_type) 
-            
-            if "claude" in model_type: # this is inefficient
-                with LocalDB() as db: 
-                    if 'system' == db.load_temp()[0].role:
-                        db.drop_table()
-                
             try: 
                 keys = []
-                for json_chunk in llm.call(prompt): 
-                    
-                    # keys.extend(list(json.loads(json_chunk).keys()))  
-                                  
+                for json_chunk in llm.call(prompt):
                     print(json_chunk)   
-                                  
-                    sys.stdout.flush() 
-                                   
-                # print(f'Keys in python:', set(keys), file=sys.stderr)    
+                    sys.stdout.flush()   
             except Exception as e:
                 raise Exception(f'Prompt:', e.args)
                 
